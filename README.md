@@ -1,6 +1,6 @@
 # remux
 
-A command line regex multiplexer for filtering and streaming data to multiple targets.
+A command line regex multiplexer for filtering and streaming lines to multiple targets.
 
 ## Usage
 
@@ -8,7 +8,9 @@ A command line regex multiplexer for filtering and streaming data to multiple ta
 remux [options] <regex0> <file0> [<regex1> <file1> ...]
 ```
 
-Omitting the last file implies STDOUT as the target, as do an explicit empty string or `-` file.
+By default, source data is streamed from STDIN, use `-i` to specify a file instead. The `-i` argument can be set more than once to read from multiple input sources in parallel. Use `-s` to instead read serially in the order specified.
+
+An empty string or `-` can be provided to `-i` to explicitly use STDIN. Similarly, an empty string or `-` for an output file to use STDOUT. Additionally, omitting the last file also implies STDOUT as the target.
 
 ## Alternatives
 
