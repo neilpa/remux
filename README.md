@@ -16,7 +16,7 @@ go get -u neilpa.me/remux
 
 ## Usage
 
-```sh
+```
 remux [options] <regex0> [<file0> [<regex1> <file1> ...]]
 ```
 
