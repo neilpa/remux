@@ -2,6 +2,10 @@
 
 A command line regex multiplexer for filtering and streaming lines to multiple targets.
 
+```sh
+tail -f log.txt | remux ERROR errors.txt WARN warnings.txt INFO verbose.txt
+```
+
 ## Usage
 
 ```sh
