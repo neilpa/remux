@@ -15,9 +15,9 @@ import (
 var (
 	version = "undefined"
 
-	serialFlag = flag.Bool("s", false, "process input serially")
+	serialFlag  = flag.Bool("s", false, "process input serially")
 	versionFlag = flag.Bool("v", false, "print version and exit")
-	inFlags xflag.MultiString
+	inFlags     xflag.MultiString
 )
 
 func init() {
@@ -53,10 +53,10 @@ func realMain(args []string) int {
 			return fatal("invalid regex %q: %s", arg, err)
 		}
 
-		s := sink{ re, nil }
+		s := sink{re, nil}
 		path := ""
 		if i+1 < flag.NArg() {
-			path = flag.Arg(i+1)
+			path = flag.Arg(i + 1)
 		}
 		switch path {
 		case "", "-":
@@ -74,10 +74,10 @@ func realMain(args []string) int {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		line := scanner.Text();
+		line := scanner.Text()
 		for _, s := range sinks {
 			if s.re.MatchString(line) {
-				_, err := io.WriteString(s.w, line + "\n")
+				_, err := io.WriteString(s.w, line+"\n")
 				if err != nil {
 					return fatal("write: ", err)
 				}
@@ -92,7 +92,7 @@ func realMain(args []string) int {
 
 type sink struct {
 	re *regexp.Regexp
-	w io.Writer
+	w  io.Writer
 }
 
 func usageError(msg string) int {
