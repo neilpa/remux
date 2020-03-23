@@ -7,23 +7,23 @@ import (
 
 const (
 	alpha = "A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ\n"
-	num = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n"
+	num   = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n"
 )
 
 func TestMain(t *testing.T) {
 	tests := []struct {
-		in string
-		out string
+		in   string
+		out  string
 		exit int
-	} {
-		{ "-v", version + "\n", 0 },
-		{ "-i testdata/alpha.txt .", alpha, 0 },
-		{ "-i testdata/num.txt .", num, 0 },
-		{ "-i testdata/alpha.txt -i testdata/num.txt .", alpha + num, 0 },
-		{ "-i testdata/alpha.txt -i testdata/num.txt [A-Z]", alpha, 0 },
-		{ "-i testdata/alpha.txt -i testdata/num.txt [0-9]", num, 0 },
-		{ "-i testdata/alpha.txt -i testdata/num.txt N", "N\n", 0 },
-		{ "-i testdata/alpha.txt -i testdata/num.txt [a-z]", "", 0 },
+	}{
+		{"-v", version + "\n", 0},
+		{"-i testdata/alpha.txt .", alpha, 0},
+		{"-i testdata/num.txt .", num, 0},
+		{"-i testdata/alpha.txt -i testdata/num.txt .", alpha + num, 0},
+		{"-i testdata/alpha.txt -i testdata/num.txt [A-Z]", alpha, 0},
+		{"-i testdata/alpha.txt -i testdata/num.txt [0-9]", num, 0},
+		{"-i testdata/alpha.txt -i testdata/num.txt N", "N\n", 0},
+		{"-i testdata/alpha.txt -i testdata/num.txt [a-z]", "", 0},
 	}
 
 	for _, tt := range tests {
@@ -40,4 +40,3 @@ func TestMain(t *testing.T) {
 		})
 	}
 }
-
