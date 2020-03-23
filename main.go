@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	version = "v0.1.0-dev"
+	version = "v1.0.0-dev"
 
 	flags *flag.FlagSet
 )
