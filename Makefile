@@ -1,7 +1,7 @@
 ARCH := darwin/amd64 linux/386 linux/amd64 windows/386 windows/amd64
 VERSION := $(shell git describe --always --dirty)
 LDFLAGS := -ldflags "-X main.version=${VERSION}"
-GOFILES := $(shell go list -f '{{range .GoFiles}}{{.}} {{end}}' ./...)
+GOFILES := $(shell go list -f '{{ join .GoFiles " " }}' ./...)
 
 remux: ${GOFILES}
 	go build ${LDFLAGS}

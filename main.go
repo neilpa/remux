@@ -13,9 +13,8 @@ import (
 )
 
 var (
-	version = "undefined"
+	version = "v0.1.0-dev"
 
-	serialFlag  = flag.Bool("s", false, "process input serially")
 	versionFlag = flag.Bool("v", false, "print version and exit")
 	inFlags     xflag.MultiString
 )
@@ -38,11 +37,27 @@ func realMain(args []string) int {
 	if flag.NArg() == 0 {
 		return usageError("no filter specified")
 	}
-	if *serialFlag {
-		return usageError("todo: serial processing not implemented yet")
+	if len(inFlags) == 0 {
+		inFlags = append(inFlags, "-")
 	}
-	if len(inFlags) > 0 {
-		return usageError("todo: input files not implemented yet")
+
+	stdin := false
+	readers := make([]io.Reader, len(inFlags))
+	for i, path := range inFlags {
+		if path == "" || path == "-" {
+			stdin = true
+			readers[i] = os.Stdin
+		} else {
+			f, err := os.Open(path)
+			if err != nil {
+				return fatal(err.Error())
+			}
+			defer f.Close()
+			readers[i] = f
+		}
+	}
+	if stdin && len(inFlags) > 1 {
+		warn("STDIN specified mulitple times and/or with other files")
 	}
 
 	sinks := make([]sink, 0)
@@ -62,7 +77,7 @@ func realMain(args []string) int {
 		case "", "-":
 			s.w = os.Stdout
 		default:
-			f, err := os.Open(path) // TODO: Allow for appending?
+			f, err := os.Create(path) // TODO: Allow for appending?
 			if err != nil {
 				return fatal("%s", err)
 			}
@@ -72,7 +87,7 @@ func realMain(args []string) int {
 		sinks = append(sinks, s)
 	}
 
-	scanner := bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(io.MultiReader(readers...))
 	for scanner.Scan() {
 		line := scanner.Text()
 		for _, s := range sinks {
@@ -99,6 +114,11 @@ func usageError(msg string) int {
 	fmt.Fprintln(os.Stderr, msg)
 	printUsage()
 	return 2
+}
+
+func warn(format string, args ...interface{}) {
+	format = os.Args[0] + ": warn: " + format + "\n"
+	fmt.Fprintf(os.Stderr, format, args...)
 }
 
 func fatal(format string, args ...interface{}) int {

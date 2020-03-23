@@ -20,9 +20,9 @@ go get -u neilpa.me/remux
 remux [options] <regex0> [<file0> [<regex1> <file1> ...]]
 ```
 
-By default, source data is streamed from `STDIN`, use `-i` to specify a file instead. The `-i` argument can be set more than once to read from multiple input sources in parallel. Use `-s` to instead read serially in the order specified.
+By default, source data is streamed from `STDIN`, use `-i` to specify a file instead. The `-i` argument can be set more than once to read from multiple input sources serially. If interleaved input is required, [send through `paste` first](https://stackoverflow.com/a/4011824)
 
-An empty string or `-` can be provided to `-i` to explicitly use `STDIN`. Similarly, an empty string or `-` for an output file to use `STDOUT`. Additionally, omitting the last file also implies `STDOUT` as the target.
+An empty string or `-` can be provided to `-i` to explicitly use `STDIN`. Similarly, an empty string or `-` for an output file to use `STDOUT`. Additionally, omitting the last file argument also implies `STDOUT` as the target.
 
 ## Alternatives
 
