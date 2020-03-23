@@ -4,6 +4,8 @@
 
 A command line regex multiplexer for filtering and streaming lines to multiple targets.
 
+## Example
+
 ```sh
 tail -f log.txt | remux ERROR errors.txt WARN warnings.txt INFO verbose.txt
 ```
@@ -13,6 +15,8 @@ tail -f log.txt | remux ERROR errors.txt WARN warnings.txt INFO verbose.txt
 ```sh
 go get -u neilpa.me/remux
 ```
+
+There are also pre-built static binaries for Windows, Mac and Linux on the [releases tab](https://github.com/neilpa/remux/releases/latest).
 
 ## Usage
 
