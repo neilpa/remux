@@ -15,26 +15,25 @@ import (
 var (
 	version = "v0.1.0-dev"
 
-	versionFlag = flag.Bool("v", false, "print version and exit")
-	inFlags     xflag.MultiString
+	flags *flag.FlagSet
 )
 
-func init() {
-	flag.Var(&inFlags, "i", "input file(s), can be set multiple times")
-}
-
 func main() {
-	os.Exit(realMain(os.Args[1:]))
+	os.Exit(realMain(os.Args[1:], os.Stdout))
 }
 
-func realMain(args []string) int {
-	flag.CommandLine.Parse(args)
-	if *versionFlag {
-		fmt.Println(version)
+func realMain(args []string, stdout io.Writer) int {
+	flags = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	var inFlags xflag.MultiString
+	flags.Var(&inFlags, "i", "input file(s), can be set multiple times")
+	verFlag := flags.Bool("v", false, "print version and exit")
+	flags.Parse(args)
+
+	if *verFlag {
+		fmt.Fprintln(stdout, version)
 		return 0
 	}
-
-	if flag.NArg() == 0 {
+	if flags.NArg() == 0 {
 		return usageError("no filter specified")
 	}
 	if len(inFlags) == 0 {
@@ -61,8 +60,8 @@ func realMain(args []string) int {
 	}
 
 	sinks := make([]sink, 0)
-	for i := 0; i < flag.NArg(); i += 2 {
-		arg := flag.Arg(i)
+	for i := 0; i < flags.NArg(); i += 2 {
+		arg := flags.Arg(i)
 		re, err := regexp.Compile(arg)
 		if err != nil {
 			return fatal("invalid regex %q: %s", arg, err)
@@ -70,12 +69,12 @@ func realMain(args []string) int {
 
 		s := sink{re, nil}
 		path := ""
-		if i+1 < flag.NArg() {
-			path = flag.Arg(i + 1)
+		if i+1 < flags.NArg() {
+			path = flags.Arg(i + 1)
 		}
 		switch path {
 		case "", "-":
-			s.w = os.Stdout
+			s.w = stdout
 		default:
 			f, err := os.Create(path) // TODO: Allow for appending?
 			if err != nil {
@@ -135,6 +134,6 @@ func printUsage() {
 Options:
 
 `, os.Args[0])
-	flag.PrintDefaults()
+	flags.PrintDefaults()
 	fmt.Fprintln(os.Stderr)
 }
